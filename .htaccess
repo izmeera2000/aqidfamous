@@ -6,4 +6,4 @@ RewriteEngine On
 # If the requested file or directory doesn't exist, redirect to public/index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /aqidfamous/public/index.php [QSA,L]
+RewriteRule ^(.*)$ /public/index.php [QSA,L]
