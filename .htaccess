@@ -1,12 +1,4 @@
-# .htaccess in the root folder (aqidfamous/)
-
-# Enable URL rewriting
+# Redirect to public folder
 RewriteEngine On
-
-# Redirect all requests to index.php in the root folder
-RewriteRule ^$ /aqidfamous/index.php [L]
-
-# If any other file/directory is requested that doesn't exist, route it to public/index.php
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /aqidfamous/public/index.php [QSA,L]
+RewriteRule ^$ public/ [L]
+RewriteRule (.*) public/$1 [L]
