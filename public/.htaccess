@@ -1,10 +1,6 @@
-# .htaccess in public or root folder
-
-# Enable URL rewriting
 RewriteEngine On
 
-# Redirect requests to index.php for non-existent files or directories
+# Redirect all requests to index.php if the file or directory does not exist
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /public/index.php [QSA,L]
-    
+RewriteRule ^ index.php [L]

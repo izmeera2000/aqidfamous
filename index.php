@@ -1,4 +1,4 @@
 <?php
 // Redirect to public/index.php
-header('Location: public');
+header('Location: /aqidfamous/public/index.php');
 exit();

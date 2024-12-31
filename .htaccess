@@ -3,10 +3,10 @@
 # Enable URL rewriting
 RewriteEngine On
 
-# Redirect all requests to the root index.php
-RewriteRule ^$ index.php [L]
+# Redirect all requests to index.php in the root folder
+RewriteRule ^$ /aqidfamous/index.php [L]
 
-# If any other file/directory is requested that doesn't exist, send it to public/index.php
+# If any other file/directory is requested that doesn't exist, route it to public/index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ /aqidfamous/public/index.php [QSA,L]
