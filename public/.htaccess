@@ -1,0 +1,10 @@
+# .htaccess in public or root folder
+
+# Enable URL rewriting
+RewriteEngine On
+
+# Redirect requests to index.php for non-existent files or directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /public/index.php [QSA,L]
+    
