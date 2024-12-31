@@ -3,17 +3,10 @@
 # Enable URL rewriting
 RewriteEngine On
 
-# Check if the request is not for an existing file or directory
+# Redirect all requests to the root index.php
+RewriteRule ^$ index.php [L]
+
+# If any other file/directory is requested that doesn't exist, send it to public/index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-
-# Check if we're on localhost (use localhost or your local domain)
-RewriteCond %{HTTP_HOST} ^localhost$ [OR]
-RewriteCond %{HTTP_HOST} ^127\.0\.0\.1$
-
-# Redirect to public/index.php for localhost
-RewriteRule ^(.*)$ /aqidfamous/public/index.php [QSA,L]
-
-# For cPanel, redirect to public/index.php under public_html
-RewriteCond %{HTTP_HOST} !^localhost$
 RewriteRule ^(.*)$ /aqidfamous/public/index.php [QSA,L]
