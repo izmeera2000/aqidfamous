@@ -1,4 +1,7 @@
-# Redirect to public folder
+Options +FollowSymLinks
 RewriteEngine On
-RewriteRule ^$ public/ [L]
-RewriteRule (.*) public/$1 [L]
+ 
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteCond %{SCRIPT_FILENAME} !-f
+ 
+RewriteRule ^.*$ ./index.php
