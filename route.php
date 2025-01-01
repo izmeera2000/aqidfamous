@@ -6,7 +6,7 @@ require __DIR__ . '/app/vendor/autoload.php';
 // echo __DIR__ . '/../';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
-$site_url = $_ENV['site3'];
+$site_url = $_ENV['site4'];
 //          HTTP protocol + Server address(localhost or example.com) + requested uri (/route or /route/home)
 if (isset($_SERVER['HTTPS'])) {
 

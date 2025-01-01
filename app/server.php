@@ -5,7 +5,7 @@ require __DIR__ . '/../route.php';
 
 
 
-$site_url = $_ENV['site2'];
+$site_url = $_ENV['site4'];
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
@@ -17,7 +17,7 @@ $errors = array();
 $toast = array();
 // $GLOBALS['$errors']= array();
 // connect to the database
-$db = mysqli_connect($_ENV['host'], $_ENV['user'], $_ENV['pass'], $_ENV['database3']);
+$db = mysqli_connect($_ENV['host'], $_ENV['user'], $_ENV['pass'], $_ENV['database4']);
 
 date_default_timezone_set('Asia/Kuala_Lumpur');
 
@@ -366,33 +366,17 @@ function generateQRCodeWithLogo($data, $logoPath){
 }
 
 
-function renderBreadcrumb($pageTitle, $breadcrumbs = []) {
-    ?>
-    <div class="page-breadcrumb">
-        <div class="row">
-            <div class="col-5 align-self-center">
-                <h4 class="page-title"><?php echo htmlspecialchars($pageTitle); ?></h4>
-            </div>
-            <div class="col-7 align-self-center">
-                <div class="d-flex align-items-center justify-content-end">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <?php foreach ($breadcrumbs as $breadcrumb) : ?>
-                                <li class="breadcrumb-item<?php echo $breadcrumb['active'] ? ' active' : ''; ?>"<?php echo $breadcrumb['active'] ? ' aria-current="page"' : ''; ?>>
-                                    <?php if (!$breadcrumb['active']) : ?>
-                                        <a href="<?php echo htmlspecialchars($breadcrumb['url']); ?>"><?php echo htmlspecialchars($breadcrumb['label']); ?></a>
-                                    <?php else : ?>
-                                        <?php echo htmlspecialchars($breadcrumb['label']); ?>
-                                    <?php endif; ?>
-                                </li>
-                            <?php endforeach; ?>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </div>
-    <?php
+function calculateAge($birthDate) {
+  // Convert the birth date to a timestamp
+  $birthDate = strtotime($birthDate);
+
+  // Get the current date
+  $currentDate = time();
+
+  // Calculate the difference in years
+  $age = floor(($currentDate - $birthDate) / (365.25 * 24 * 60 * 60));
+
+  return $age;
 }
 
  

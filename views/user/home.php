@@ -1,3 +1,5 @@
+<?php include "app/server.php"; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,7 +18,7 @@
     <!-- Hero Section -->
     <section id="hero" class="hero section dark-background">
 
-      <img src="assets/user/img/hero-bg.jpg" alt="" data-aos="fade-in">
+      <img src="assets/user/img/bg2.jpg" alt="" data-aos="fade-in">
 
       <div class="container" data-aos="zoom-out" data-aos-delay="100">
         <h2>Aqid Danial</h2>

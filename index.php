@@ -13,26 +13,46 @@ function user_home(&$site_url)
 function user_about(&$site_url)
 {
 	$current_page = 'about';
-
+	$page_title = "About";
+	$page_description = "about";
+	$breadcrumbs = [
+		['label' => 'Home', 'url' => $site_url, 'active' => false],
+		['label' => 'About', 'url' => $site_url . '/about', 'active' => true],
+	];
 	require('views/user/about.php');
 }
 function user_experience(&$site_url)
 {
 	$current_page = 'experience';
-
+	$page_title = "Experience";
+	$page_description = "experience";
+	$breadcrumbs = [
+		['label' => 'Home', 'url' => $site_url, 'active' => false],
+		['label' => 'Experience', 'url' => $site_url . '/experience', 'active' => true],
+	];
 	require('views/user/experience.php');
 }
 function user_gallery(&$site_url)
 {
 	$current_page = 'gallery';
-
+	$page_title = "Gallery";
+	$page_description = "gallery";
+	$breadcrumbs = [
+		['label' => 'Home', 'url' => $site_url, 'active' => false],
+		['label' => 'Gallery', 'url' => $site_url . '/gallery', 'active' => true],
+	];
 	require('views/user/gallery.php');
 }
 
 function user_contact(&$site_url)
 {
 	$current_page = 'contact';
-
+	$page_title = "Contact";
+	$page_description = "Contact";
+	$breadcrumbs = [
+		['label' => 'Home', 'url' => $site_url, 'active' => false],
+		['label' => 'Contact', 'url' => $site_url . '/contact', 'active' => true],
+	];
 	require('views/user/contact.php');
 }
 function server()
@@ -50,6 +70,45 @@ function page404()
 
 	// die('Page not found. Please try some different url.');
 }
+
+function render_title_breadcrumbs($page_title, $page_description, $breadcrumbs)
+{
+	echo '<div class="page-title" data-aos="fade">';
+
+	// Page Title and Description
+	echo '<div class="heading">';
+	echo '<div class="container">';
+	echo '<div class="row d-flex justify-content-center text-center">';
+	echo '<div class="col-lg-8">';
+	echo '<h1>' . htmlspecialchars($page_title) . '</h1>';
+	echo '<p class="mb-0">' . htmlspecialchars($page_description) . '</p>';
+	echo '</div>';
+	echo '</div>';
+	echo '</div>';
+	echo '</div>';
+
+	// Breadcrumbs
+	if (!empty($breadcrumbs)) {
+		echo '<nav class="breadcrumbs">';
+		echo '<div class="container">';
+		echo '<ol>';
+		foreach ($breadcrumbs as $breadcrumb) {
+			if (!empty($breadcrumb['active'])) {
+				// Current page (active breadcrumb)
+				echo '<li class="current">' . htmlspecialchars($breadcrumb['label']) . '</li>';
+			} else {
+				// Non-active breadcrumb with a link
+				echo '<li><a href="' . htmlspecialchars($breadcrumb['url']) . '">' . htmlspecialchars($breadcrumb['label']) . '</a></li>';
+			}
+		}
+		echo '</ol>';
+		echo '</div>';
+		echo '</nav>';
+	}
+
+	echo '</div>';
+}
+
 
 
 function check_session(&$site_url, $admin = 0)
@@ -86,6 +145,8 @@ function check_session2(&$site_url)
 	}
 
 }
+
+
 
 // debug_to_console2($current_url);
 

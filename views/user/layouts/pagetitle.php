@@ -1,5 +1,5 @@
-    <!-- Page Title -->
-    <div class="page-title" data-aos="fade">
+<!-- Page Title -->
+<!-- <div class="page-title" data-aos="fade">
       <div class="heading">
         <div class="container">
           <div class="row d-flex justify-content-center text-center">
@@ -18,4 +18,11 @@
           </ol>
         </div>
       </nav>
-    </div><!-- End Page Title -->
+    </div> -->
+<!-- End Page Title -->
+
+<?php
+
+render_title_breadcrumbs($page_title, $page_description, $breadcrumbs);
+
+?>
