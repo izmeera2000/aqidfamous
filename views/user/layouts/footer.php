@@ -1,25 +1,36 @@
 <footer id="footer" class="footer dark-background">
+  <div class="container">
+    <h3 class="sitename">aqidfamous</h3>
+    <p>Your trustworthy graphic designer.</p>
+    <div class="social-links d-flex justify-content-center">
+      <?php
+
+
+
+      $query =
+        "SELECT  *   FROM social   ";
+
+
+      $results = mysqli_query($db, $query);
+
+      while ($row = $results->fetch_assoc()) { ?>
+        <a href="<?php echo $row['link'] ?>"><i class="<?php echo $row['logo'] ?>"></i></a>
+        <?php
+
+      }
+      ?>
+    </div>
     <div class="container">
-      <h3 class="sitename">Personal</h3>
-      <p>Et aut eum quis fuga eos sunt ipsa nihil. Labore corporis magni eligendi fuga maxime saepe commodi placeat.</p>
-      <div class="social-links d-flex justify-content-center">
-        <a href=""><i class="bi bi-twitter-x"></i></a>
-        <a href=""><i class="bi bi-facebook"></i></a>
-        <a href=""><i class="bi bi-instagram"></i></a>
-        <a href=""><i class="bi bi-skype"></i></a>
-        <a href=""><i class="bi bi-linkedin"></i></a>
+      <div class="copyright">
+        <span>Copyright</span> <strong class="px-1 sitename">aqidfamous</strong> <span>All Rights Reserved</span>
       </div>
-      <div class="container">
-        <div class="copyright">
-          <span>Copyright</span> <strong class="px-1 sitename">aqidfamous</strong> <span>All Rights Reserved</span>
-        </div>
-        <div class="credits">
-          <!-- All the links in the footer should remain intact. -->
-          <!-- You can delete the links only if you've purchased the pro version. -->
-          <!-- Licensing information: https://bootstrapmade.com/license/ -->
-          <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-          Designed by  Izmeer Aiman 
-        </div>
+      <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you've purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+        Designed by Izmeer Aiman
       </div>
     </div>
-  </footer>
+  </div>
+</footer>

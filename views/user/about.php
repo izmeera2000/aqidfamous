@@ -19,49 +19,98 @@
         <!-- About Section -->
         <section id="about" class="about section">
 
+            <?php
+
+
+
+            $query =
+                "SELECT  * FROM about  ";
+
+            $aboutarr = array();
+
+            $results = mysqli_query($db, $query);
+
+            while ($row = $results->fetch_assoc()) {
+
+                $aboutarr[$row['name']] = $row;
+            }
+
+
+
+            ?>
+
             <div class="container" data-aos="fade-up" data-aos-delay="100">
 
                 <div class="row gy-4 justify-content-center">
                     <div class="col-lg-4">
-                        <img src="assets/user/img/aqid.jpg" class="img-fluid" alt="">
+                        <img src="assets/user/img/mraqid3.jpg" class="img-fluid" alt="">
                     </div>
                     <div class="col-lg-8 content">
-                        <h2>Graphic Designer</h2>
+                        <h2><?php if (isset($aboutarr['title'])) {
+                            echo $aboutarr['title']['content'];
+                        } ?></h2>
+
                         <p class="fst-italic py-3">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                            labore et dolore
-                            magna aliqua.
+                        <h2><?php if (isset($aboutarr['subtitle'])) {
+                            echo $aboutarr['subtitle']['content'];
+                        } ?></h2>
                         </p>
                         <div class="row">
                             <div class="col-lg-6">
                                 <ul>
-                                    <li><i class="bi bi-chevron-right"></i> <strong>Birthday:</strong> <span>31 Jan
-                                            2000</span></li>
+                                    <li><i class="bi bi-chevron-right"></i> <strong>Birthday:</strong> <span>
+                                            <?php if (isset($aboutarr['birthday'])) {
+                                                 $timestamp = strtotime($aboutarr['birthday']['content']);
+                                                echo date('jS F Y', $timestamp);
+                                            } ?>
+                                        </span></li>
                                     <li><i class="bi bi-chevron-right"></i> <strong>Website:</strong>
-                                        <span>www.aqidfamous.com</span></li>
-                                    <li><i class="bi bi-chevron-right"></i> <strong>Phone:</strong> <span>+123 456
-                                            7890</span></li>
-                                    <li><i class="bi bi-chevron-right"></i> <strong>City:</strong> <span>Rawang,
-                                            USA</span></li>
+                                        <span>
+                                            <?php if (isset($aboutarr['website'])) {
+                                                echo $aboutarr['website']['content'];
+                                            } ?>
+                                        </span>
+                                    </li>
+                                    <li><i class="bi bi-chevron-right"></i> <strong>Phone:</strong> <span>
+                                            <?php if (isset($aboutarr['phone'])) {
+                                                echo $aboutarr['phone']['content'];
+                                            } ?>
+                                        </span></li>
+                                    <li><i class="bi bi-chevron-right"></i> <strong>City:</strong> <span>
+                                            <?php if (isset($aboutarr['address'])) {
+                                                echo $aboutarr['address']['content'];
+                                            } ?>
+                                        </span></li>
                                 </ul>
                             </div>
                             <div class="col-lg-6">
                                 <ul>
-                                    <li><i class="bi bi-chevron-right"></i> <strong>Age:</strong> <span><?php echo calculateAge("2000-1-31") ?></span></li>
-                                    <li><i class="bi bi-chevron-right"></i> <strong>Degree:</strong> <span>Master</span>
+                                    <li><i class="bi bi-chevron-right"></i> <strong>Age:</strong>
+                                        <span><?php if (isset($aboutarr['birthday'])) {
+                                            echo calculateAge($aboutarr['birthday']['content']);
+                                        } ?></span>
+                                    </li>
+                                    <li><i class="bi bi-chevron-right"></i> <strong>Education:</strong> <span><?php if (isset($aboutarr['education'])) {
+                                        echo $aboutarr['education']['content'];
+                                    } ?></span>
                                     </li>
                                     <li><i class="bi bi-chevron-right"></i> <strong>Email:</strong>
-                                        <span>email@example.com</span></li>
+                                        <span><?php if (isset($aboutarr['email'])) {
+                                            echo $aboutarr['email']['content'];
+                                        } ?></span>
+                                    </li>
                                     <li><i class="bi bi-chevron-right"></i> <strong>Freelance:</strong>
-                                        <span>Available</span></li>
+                                        <span><?php if (isset($aboutarr['status_freelance'])) {
+                                            echo $aboutarr['status_freelance']['content'];
+                                        } ?></span>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
                         <p class="py-3">
-                            Officiis eligendi itaque labore et dolorum mollitia officiis optio vero. Quisquam sunt
-                            adipisci omnis et ut. Nulla accusantium dolor incidunt officia tempore. Et eius omnis.
-                            Cupiditate ut dicta maxime officiis quidem quia. Sed et consectetur qui quia repellendus
-                            itaque neque.
+                            <?php if (isset($aboutarr['description'])) {
+                                echo $aboutarr['description']['content'];
+                            } ?>
                         </p>
                     </div>
                 </div>
@@ -80,8 +129,9 @@
                     <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center">
                         <i class="bi bi-emoji-smile"></i>
                         <div class="stats-item">
-                            <span data-purecounter-start="0" data-purecounter-end="232" data-purecounter-duration="1"
-                                class="purecounter"></span>
+                            <span data-purecounter-start="0" data-purecounter-end=" <?php if (isset($aboutarr['clients'])) {
+                                echo $aboutarr['clients']['content'];
+                            } ?>" data-purecounter-duration="1" class="purecounter"></span>
                             <p>Happy Clients</p>
                         </div>
                     </div><!-- End Stats Item -->
@@ -89,8 +139,9 @@
                     <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center">
                         <i class="bi bi-journal-richtext"></i>
                         <div class="stats-item">
-                            <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1"
-                                class="purecounter"></span>
+                            <span data-purecounter-start="0" data-purecounter-end=" <?php if (isset($aboutarr['projects'])) {
+                                echo $aboutarr['projects']['content'];
+                            } ?>" data-purecounter-duration="1" class="purecounter"></span>
                             <p>Projects</p>
                         </div>
                     </div><!-- End Stats Item -->
@@ -98,8 +149,9 @@
                     <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center">
                         <i class="bi bi-headset"></i>
                         <div class="stats-item">
-                            <span data-purecounter-start="0" data-purecounter-end="1463" data-purecounter-duration="1"
-                                class="purecounter"></span>
+                            <span data-purecounter-start="0" data-purecounter-end=" <?php if (isset($aboutarr['hours'])) {
+                                echo $aboutarr['hours']['content'];
+                            } ?>" data-purecounter-duration="1" class="purecounter"></span>
                             <p>Hours Of Support</p>
                         </div>
                     </div><!-- End Stats Item -->
@@ -135,57 +187,76 @@
 
                     <div class="col-lg-6">
 
-                        <div class="progress">
-                            <span class="skill"><span>HTML</span> <i class="val">100%</i></span>
-                            <div class="progress-bar-wrap">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0"
-                                    aria-valuemax="100"></div>
-                            </div>
-                        </div><!-- End Skills Item -->
 
-                        <div class="progress">
-                            <span class="skill"><span>CSS</span> <i class="val">90%</i></span>
-                            <div class="progress-bar-wrap">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0"
-                                    aria-valuemax="100"></div>
-                            </div>
-                        </div><!-- End Skills Item -->
 
-                        <div class="progress">
-                            <span class="skill"><span>JavaScript</span> <i class="val">75%</i></span>
-                            <div class="progress-bar-wrap">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
-                                    aria-valuemax="100"></div>
-                            </div>
-                        </div><!-- End Skills Item -->
+
+
+                        <?php
+
+
+
+                        $query =
+                            "SELECT  *   FROM skills  LIMIT 3 ";
+
+
+                        $results = mysqli_query($db, $query);
+
+                        while ($row = $results->fetch_assoc()) { ?>
+
+
+                            <div class="progress">
+                                <span class="skill"><span><?php echo $row['name'] ?></span> <i
+                                        class="val"><?php echo $row['percentage'] ?>%</i></span>
+                                <div class="progress-bar-wrap">
+                                    <div class="progress-bar" role="progressbar"
+                                        aria-valuenow="<?php echo $row['percentage'] ?>" aria-valuemin="0"
+                                        aria-valuemax="100"></div>
+                                </div>
+                            </div><!-- End Skills Item -->
+                            <?php
+
+                        }
+
+
+
+                        ?>
 
                     </div>
 
                     <div class="col-lg-6">
 
-                        <div class="progress">
-                            <span class="skill"><span>PHP</span> <i class="val">80%</i></span>
-                            <div class="progress-bar-wrap">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0"
-                                    aria-valuemax="100"></div>
-                            </div>
-                        </div><!-- End Skills Item -->
 
-                        <div class="progress">
-                            <span class="skill"><span>Canva</span> <i class="val">90%</i></span>
-                            <div class="progress-bar-wrap">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0"
-                                    aria-valuemax="100"></div>
-                            </div>
-                        </div><!-- End Skills Item -->
 
-                        <div class="progress">
-                            <span class="skill"><span>Photoshop</span> <i class="val">55%</i></span>
-                            <div class="progress-bar-wrap">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="55" aria-valuemin="0"
-                                    aria-valuemax="100"></div>
-                            </div>
-                        </div><!-- End Skills Item -->
+
+                        <?php
+
+
+
+                        $query =
+                            "SELECT  *   FROM skills  LIMIT 3 OFFSET 3 ";
+
+
+                        $results = mysqli_query($db, $query);
+
+                        while ($row = $results->fetch_assoc()) { ?>
+
+
+                            <div class="progress">
+                                <span class="skill"><span><?php echo $row['name'] ?></span> <i
+                                        class="val"><?php echo $row['percentage'] ?>%</i></span>
+                                <div class="progress-bar-wrap">
+                                    <div class="progress-bar" role="progressbar"
+                                        aria-valuenow="<?php echo $row['percentage'] ?>" aria-valuemin="0"
+                                        aria-valuemax="100"></div>
+                                </div>
+                            </div><!-- End Skills Item -->
+                            <?php
+
+                        }
+
+
+
+                        ?>
 
                     </div>
 
@@ -200,103 +271,51 @@
 
             <!-- Section Title -->
             <div class="container section-title" data-aos="fade-up">
-                <h2>Features</h2>
-                <div><span>I'm</span> <span class="description-title">interested in</span></div>
+                <h2>Skills</h2>
+                <div><span>My</span> <span class="description-title">Skills</span></div>
             </div><!-- End Section Title -->
 
             <div class="container">
 
                 <div class="row gy-4">
 
-                    <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="100">
-                        <div class="features-item">
-                            <i class="bi bi-eye" style="color: #ffbb2c;"></i>
-                            <h3><a href="" class="stretched-link">Lorem Ipsum</a></h3>
-                        </div>
-                    </div><!-- End Feature Item -->
 
-                    <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="200">
-                        <div class="features-item">
-                            <i class="bi bi-infinity" style="color: #5578ff;"></i>
-                            <h3><a href="" class="stretched-link">Dolor Sitema</a></h3>
-                        </div>
-                    </div><!-- End Feature Item -->
 
-                    <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="300">
-                        <div class="features-item">
-                            <i class="bi bi-mortarboard" style="color: #e80368;"></i>
-                            <h3><a href="" class="stretched-link">Sed perspiciatis</a></h3>
-                        </div>
-                    </div><!-- End Feature Item -->
 
-                    <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="400">
-                        <div class="features-item">
-                            <i class="bi bi-nut" style="color: #e361ff;"></i>
-                            <h3><a href="" class="stretched-link">Magni Dolores</a></h3>
-                        </div>
-                    </div><!-- End Feature Item -->
+                    <?php
 
-                    <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="500">
-                        <div class="features-item">
-                            <i class="bi bi-shuffle" style="color: #47aeff;"></i>
-                            <h3><a href="" class="stretched-link">Nemo Enim</a></h3>
-                        </div>
-                    </div><!-- End Feature Item -->
 
-                    <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="600">
-                        <div class="features-item">
-                            <i class="bi bi-star" style="color: #ffa76e;"></i>
-                            <h3><a href="" class="stretched-link">Eiusmod Tempor</a></h3>
-                        </div>
-                    </div><!-- End Feature Item -->
 
-                    <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="700">
-                        <div class="features-item">
-                            <i class="bi bi-x-diamond" style="color: #11dbcf;"></i>
-                            <h3><a href="" class="stretched-link">Midela Teren</a></h3>
-                        </div>
-                    </div><!-- End Feature Item -->
+                    $query =
+                        "SELECT  *   FROM skills  ";
 
-                    <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="800">
-                        <div class="features-item">
-                            <i class="bi bi-camera-video" style="color: #4233ff;"></i>
-                            <h3><a href="" class="stretched-link">Pira Neve</a></h3>
-                        </div>
-                    </div><!-- End Feature Item -->
 
-                    <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="900">
-                        <div class="features-item">
-                            <i class="bi bi-command" style="color: #b2904f;"></i>
-                            <h3><a href="" class="stretched-link">Dirada Pack</a></h3>
-                        </div>
-                    </div><!-- End Feature Item -->
+                    $results = mysqli_query($db, $query);
 
-                    <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="1000">
-                        <div class="features-item">
-                            <i class="bi bi-dribbble" style="color: #b20969;"></i>
-                            <h3><a href="" class="stretched-link">Moton Ideal</a></h3>
-                        </div>
-                    </div><!-- End Feature Item -->
+                    while ($row = $results->fetch_assoc()) { ?>
 
-                    <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="1100">
-                        <div class="features-item">
-                            <i class="bi bi-activity" style="color: #ff5828;"></i>
-                            <h3><a href="" class="stretched-link">Verdo Park</a></h3>
-                        </div>
-                    </div><!-- End Feature Item -->
 
-                    <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="1200">
-                        <div class="features-item">
-                            <i class="bi bi-brightness-high" style="color: #29cc61;"></i>
-                            <h3><a href="" class="stretched-link">Flavor Nivelanda</a></h3>
-                        </div>
-                    </div><!-- End Feature Item -->
+                        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="features-item">
+                                <i class="<?php echo $row['logo'] ?>" style="color: <?php echo $row['color'] ?>;"></i>
+                                <h3><a href="" class="stretched-link"><?php echo $row['name'] ?></a></h3>
+                            </div>
+                        </div><!-- End Feature Item -->
+                        <?php
+
+                    }
+
+
+
+                    ?>
 
                 </div>
 
             </div>
 
         </section><!-- /Interests Section -->
+
+
 
         <!-- Testimonials Section -->
         <section id="testimonials" class="testimonials section">
@@ -338,84 +357,53 @@
           </script>
                     <div class="swiper-wrapper">
 
-                        <div class="swiper-slide">
-                            <div class="testimonial-item" "="">
-            <p>
-              <i class=" bi bi-quote quote-icon-left"></i>
-                                <span>Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit
-                                    rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam,
-                                    risus at semper.</span>
-                                <i class="bi bi-quote quote-icon-right"></i>
-                                </p>
-                                <img src="assets/img/testimonials/testimonials-1.jpg" class="testimonial-img" alt="">
-                                <h3>Saul Goodman</h3>
-                                <h4>Ceo &amp; Founder</h4>
-                            </div>
-                        </div><!-- End testimonial item -->
 
-                        <div class="swiper-slide">
-                            <div class="testimonial-item">
-                                <p>
-                                    <i class="bi bi-quote quote-icon-left"></i>
-                                    <span>Export tempor illum tamen malis malis eram quae irure esse labore quem cillum
-                                        quid malis quorum velit fore eram velit sunt aliqua noster fugiat irure amet
-                                        legam anim culpa.</span>
-                                    <i class="bi bi-quote quote-icon-right"></i>
-                                </p>
-                                <img src="assets/img/testimonials/testimonials-2.jpg" class="testimonial-img" alt="">
-                                <h3>Sara Wilsson</h3>
-                                <h4>Designer</h4>
-                            </div>
-                        </div><!-- End testimonial item -->
 
-                        <div class="swiper-slide">
-                            <div class="testimonial-item">
-                                <p>
-                                    <i class="bi bi-quote quote-icon-left"></i>
-                                    <span>Enim nisi quem export duis labore cillum quae magna enim sint quorum nulla
-                                        quem veniam duis minim tempor labore quem eram duis noster aute amet eram fore
-                                        quis sint minim.</span>
-                                    <i class="bi bi-quote quote-icon-right"></i>
-                                </p>
-                                <img src="assets/img/testimonials/testimonials-3.jpg" class="testimonial-img" alt="">
-                                <h3>Jena Karlis</h3>
-                                <h4>Store Owner</h4>
-                            </div>
-                        </div><!-- End testimonial item -->
+                        <?php
 
-                        <div class="swiper-slide">
-                            <div class="testimonial-item">
-                                <p>
-                                    <i class="bi bi-quote quote-icon-left"></i>
-                                    <span>Fugiat enim eram quae cillum dolore dolor amet nulla culpa multos export minim
-                                        fugiat dolor enim duis veniam ipsum anim magna sunt elit fore quem dolore labore
-                                        illum veniam.</span>
-                                    <i class="bi bi-quote quote-icon-right"></i>
-                                </p>
-                                <img src="assets/img/testimonials/testimonials-4.jpg" class="testimonial-img" alt="">
-                                <h3>Matt Brandon</h3>
-                                <h4>Freelancer</h4>
-                            </div>
-                        </div><!-- End testimonial item -->
 
-                        <div class="swiper-slide">
-                            <div class="testimonial-item">
-                                <p>
-                                    <i class="bi bi-quote quote-icon-left"></i>
-                                    <span>Quis quorum aliqua sint quem legam fore sunt eram irure aliqua veniam tempor
-                                        noster veniam sunt culpa nulla illum cillum fugiat legam esse veniam culpa fore
-                                        nisi cillum quid.</span>
-                                    <i class="bi bi-quote quote-icon-right"></i>
-                                </p>
-                                <img src="assets/img/testimonials/testimonials-5.jpg" class="testimonial-img" alt="">
-                                <h3>John Larson</h3>
-                                <h4>Entrepreneur</h4>
+
+                        $query =
+                            "SELECT  *   FROM reference   ORDER BY ref_order ASC";
+
+
+                        $results = mysqli_query($db, $query);
+
+                        while ($row = $results->fetch_assoc()) { ?>
+
+                            <div class="swiper-slide">
+
+                                <div class="testimonial-item">
+                                    <div class="box">
+                                        <p>Email : <a
+                                                href="mailto:<?php echo $row['email'] ?>"><?php echo $row['email'] ?></a>
+                                        </p>
+                                        <p>Phone : <a
+                                                href="tel:<?php echo $cleaned_phone_number = preg_replace('/[^0-9+]/', '', $row['phone_num']) ?>"><?php echo $row['phone_num'] ?></a>
+                                        </p>
+                                    </div>
+
+                                    <!-- <img src="assets/img/testimonials/testimonials-1.jpg" class="testimonial-img" alt=""> -->
+                                    <h3><?php echo $row['name'] ?></h3>
+                                    <h5 class="fst-italic"><?php echo $row['title'] ?></h5>
+                                    <h4><?php echo $row['place'] ?></h4>
+                                </div>
                             </div>
-                        </div><!-- End testimonial item -->
+                            <?php
+
+                        }
+
+
+
+                        ?>
+
 
                     </div>
+
                     <div class="swiper-pagination"></div>
                 </div>
+
+
 
             </div>
 

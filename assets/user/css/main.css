@@ -942,6 +942,11 @@ section,
   color: color-mix(in srgb, var(--default-color), transparent 20%);
   margin: 0 0 0 45px;
 }
+.testimonials .testimonial-item h5 {
+  font-size: 12px;
+  color: color-mix(in srgb, var(--default-color), transparent 20%);
+  margin: 0 0 0 45px;
+}
 
 .testimonials .testimonial-item .quote-icon-left,
 .testimonials .testimonial-item .quote-icon-right {
@@ -964,10 +969,10 @@ section,
   transform: scale(-1, -1);
 }
 
-.testimonials .testimonial-item p {
+.testimonials .testimonial-item .box {
   font-style: italic;
   margin: 0 15px 0 15px;
-  padding: 20px 20px 60px 20px;
+  padding: 20px 20px 20px 20px;
   background: var(--surface-color);
   border-radius: 6px;
   position: relative;

@@ -25,10 +25,23 @@
         <p>I'm <span class="typed" data-typed-items="  Freelancer,Gooner,  Graphic Designer">Graphic
             designer</span><span class="typed-cursor typed-cursor--blink"></span></p>
         <div class="social-links">
-          <a href="#"><i class="bi bi-twitter-x"></i></a>
-          <a href="https://www.facebook.com/aqid.danial.9"><i class="bi bi-facebook"></i></a>
-          <a href="#"><i class="bi bi-instagram"></i></a>
-          <a href="#"><i class="bi bi-linkedin"></i></a>
+
+                  <?php
+
+
+
+                  $query =
+                    "SELECT  *   FROM social   ";
+
+
+                  $results = mysqli_query($db, $query);
+
+                  while ($row = $results->fetch_assoc()) { ?>
+                    <a href="<?php echo $row['link'] ?>"><i class="<?php echo $row['logo'] ?>"></i></a>
+                    <?php
+
+                  }
+?>
         </div>
       </div>
 
