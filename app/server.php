@@ -18,7 +18,7 @@ $toast = array();
 // $GLOBALS['$errors']= array();
 // connect to the database
 $db = mysqli_connect($_ENV['host'], $_ENV['user'], $_ENV['pass'], $_ENV['database4']);
-
+$access_key = $_ENV['ipapi'];
 date_default_timezone_set('Asia/Kuala_Lumpur');
 
 
@@ -305,13 +305,14 @@ function sendmail($receiver, $title, $filepath, $var = "")
 
 
 
- 
-function generateQRCodeWithLogo($data, $logoPath){
+
+function generateQRCodeWithLogo($data, $logoPath)
+{
   $options = new QROptions([
-      'outputType' => QRCode::OUTPUT_IMAGE_PNG,
-      'eccLevel' => QRCode::ECC_H,
-      'scale' => 10,
-      'imageBase64' => false, // We will convert to base64 manually
+    'outputType' => QRCode::OUTPUT_IMAGE_PNG,
+    'eccLevel' => QRCode::ECC_H,
+    'scale' => 10,
+    'imageBase64' => false, // We will convert to base64 manually
   ]);
 
   // Generate the QR code image
@@ -338,16 +339,16 @@ function generateQRCodeWithLogo($data, $logoPath){
 
   // Merge logo onto QR code
   imagecopyresampled(
-      $qrImageResource,
-      $logoImageResource,
-      $xPos,
-      $yPos,
-      0,
-      0,
-      $logoQRWidth,
-      $logoQRHeight,
-      $logoWidth,
-      $logoHeight
+    $qrImageResource,
+    $logoImageResource,
+    $xPos,
+    $yPos,
+    0,
+    0,
+    $logoQRWidth,
+    $logoQRHeight,
+    $logoWidth,
+    $logoHeight
   );
 
   // Output QR code with logo to a string
@@ -366,7 +367,8 @@ function generateQRCodeWithLogo($data, $logoPath){
 }
 
 
-function calculateAge($birthDate) {
+function calculateAge($birthDate)
+{
   // Convert the birth date to a timestamp
   $birthDate = strtotime($birthDate);
 
@@ -379,6 +381,200 @@ function calculateAge($birthDate) {
   return $age;
 }
 
- 
 
+
+function trackVisitor($access_key, &$db)
+{
+  // Get visitor's IP address
+  $ip_address = $_SERVER['REMOTE_ADDR'];
+
+  // Get visitor's user agent (browser info)
+  $user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+  // Get the current page URL
+  $page_url = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];  // Full URL
+
+  // Geolocation API: Use ipinfo.io to get location details from the IP address
+  $location_data = file_get_contents("http://ipinfo.io/$ip_address/json?token=$access_key");
+  $location_data = json_decode($location_data, true);
+
+  // Extract geolocation details (default to 'Unknown' if not available)
+  $city = isset($location_data['city']) ? $location_data['city'] : 'Unknown';
+  $region = isset($location_data['region']) ? $location_data['region'] : 'Unknown';
+  $country = isset($location_data['country']) ? $location_data['country'] : 'Unknown';
+
+  // Prepare the SQL query to insert visitor data into the database using MySQLi
+  $query = "INSERT INTO visitors (ip, user_agent, page_url, city, region, country) 
+            VALUES ('$ip_address', '$user_agent', '$page_url', '$city', '$region', '$country')";
+
+  // Execute the query and check for success
+  if ($db->query($query)) {
+    // echo "Visitor information recorded successfully.";
+  } else {
+    // echo "Error: " . $db->error;
+  }
+}
+
+
+if (isset($_POST['visitor_info'])) {
+
+
+  // Check for connection errors
+
+
+  // Get visitor data from POST request
+  $ip_address = $_SERVER['REMOTE_ADDR'];
+  $user_agent = $_POST['user_agent'];
+  $page_url = $_POST['page_url'];
+
+  // Fetch geolocation information securely using server-side API key
+  // Make a request to the ipinfo.io API to get geolocation data
+  $location_data = file_get_contents("http://ipinfo.io/$ip_address/json?token=$access_key");
+  $location_data = json_decode($location_data, true);
+
+  // Extract geolocation details (default to 'Unknown' if not available)
+  $city = isset($location_data['city']) ? $location_data['city'] : 'Unknown';
+  $region = isset($location_data['region']) ? $location_data['region'] : 'Unknown';
+  $country = isset($location_data['country']) ? $location_data['country'] : 'Unknown';
+
+  // Prepare and bind the SQL query using MySQLi
+  $stmt = $db->prepare("INSERT INTO visitors (ip, user_agent, page_url, city, region, country) 
+                        VALUES (?, ?, ?, ?, ?, ?)");
+  $stmt->bind_param("ssssss", $ip_address, $user_agent, $page_url, $city, $region, $country);
+
+  // Execute the query and check for success
+  if ($stmt->execute()) {
+    // echo json_encode(["status" => "success", "message" => "Visitor information recorded successfully."]);
+  } else {
+    // echo json_encode(["status" => "error", "message" => "Error: " . $stmt->error]);
+  }
+
+}
+
+
+if (isset($_POST['visitor_click'])) {
+
+
+  // Get visitor data from POST request
+  $ip_address = $_SERVER['REMOTE_ADDR'];
+  $user_agent = $_POST['user_agent'];
+  $click_url = $_POST['click_url'];
+
+  // Fetch geolocation information securely using server-side API key
+  // Make a request to the ipinfo.io API to get geolocation data
+  $location_data = file_get_contents("http://ipinfo.io/$ip_address/json?token=$access_key");
+  $location_data = json_decode($location_data, true);
+
+  // Extract geolocation details (default to 'Unknown' if not available)
+  $city = isset($location_data['city']) ? $location_data['city'] : 'Unknown';
+  $region = isset($location_data['region']) ? $location_data['region'] : 'Unknown';
+  $country = isset($location_data['country']) ? $location_data['country'] : 'Unknown';
+
+  // Prepare and bind the SQL query using MySQLi
+  $stmt = $db->prepare("INSERT INTO clicks (ip, user_agent, click_url, city, region, country) 
+                        VALUES (?, ?, ?, ?, ?, ?)");
+  $stmt->bind_param("ssssss", $ip_address, $user_agent, $click_url, $city, $region, $country);
+
+  // Execute the query and check for success
+  if ($stmt->execute()) {
+    // echo json_encode(["status" => "success", "message" => "Visitor information recorded successfully."]);
+  } else {
+    // echo json_encode(["status" => "error", "message" => "Error: " . $stmt->error]);
+  }
+
+}
+
+
+if (isset($_POST['get_visitor_data'])) {
+  $filter = $_POST['get_visitor_data']['filter'];
+
+  switch ($filter) {
+    case 'today':
+      $date_filter = date('Y-m-d');  // Today's date
+      $query = "SELECT *  FROM visitors WHERE DATE(visit_time) = ?";
+      break;
+
+    case 'month':
+      $date_filter = date('Y-m');  // Current month
+      $query = "SELECT * FROM visitors WHERE DATE_FORMAT(visit_time, '%Y-%m') = ?";
+      break;
+
+    case 'year':
+      $date_filter = date('Y');  // Current year
+      $query = "SELECT * FROM visitors WHERE YEAR(visit_time) = ?";
+      break;
+
+    default:
+      echo json_encode(["status" => "error", "message" => "Invalid filter"]);
+      exit();
+  }
+
+  if ($stmt = $db->prepare($query)) {
+    $stmt->bind_param('s', $date_filter);  // Bind the filter date
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // Initialize the response data
+    $visitorCount = 0;
+    $details = [];
+
+    while ($row = $result->fetch_assoc()) {
+      $visitorCount++;
+      $details[] = [
+        'ip_address' => $row['ip'],
+        'user_agent' => $row['user_agent'],
+        'page_url' => $row['page_url'],
+      ];
+    }
+
+    // Get the previous count (for comparison)
+    $previousCountQuery = "SELECT COUNT(*) AS previous_count FROM visitors WHERE DATE(visit_time) < ?";
+    $stmt2 = $db->prepare($previousCountQuery);
+    $stmt2->bind_param('s', $date_filter); // Previous count before the selected date range
+    $stmt2->execute();
+    $stmt2->bind_result($previousCount);
+    $stmt2->fetch();
+
+    // Calculate the percentage change if previous count exists
+    $percentageChange = 0;
+    $status = 'no change'; // Default status
+
+    if ($previousCount > 0) {
+      // Calculate percentage change
+      $percentageChange = (($visitorCount - $previousCount) / $previousCount) * 100;
+
+      // Determine if it's an increase or decrease
+      if ($percentageChange > 0) {
+        $status = 'increase';
+      } elseif ($percentageChange < 0) {
+        $status = 'decrease';
+      } 
+
+
+      
+    } else {
+      $percentageChange = ($visitorCount ) * 100;
+
+        $status = 'increase';
+    }
+
+    // Example: Add change percentage to response
+    $changePercentage = round($percentageChange, 2); // Round to 2 decimal places
+
+    // Return the response as JSON
+    $response = [
+      "status" => "success",
+      "visitorCount" => $visitorCount,
+      "changePercentage" => $changePercentage,
+      "statusText" => $status, // 'increase', 'decrease', or 'no change'
+      "details" => $details
+    ];
+
+    // Set the correct header and output JSON
+    header('Content-Type: application/json');
+    echo json_encode($response);
+  } else {
+    echo json_encode(["status" => "error", "message" => "Error preparing the query"]);
+  }
+}
 ?>

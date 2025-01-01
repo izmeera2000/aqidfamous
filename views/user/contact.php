@@ -63,9 +63,11 @@
               <i class="icon bi bi-telephone flex-shrink-0"></i>
               <div>
                 <h3>Call Me</h3>
-                <p><a href="tel:<?php echo $cleaned_phone_number = preg_replace('/[^0-9+]/', '', $aboutarr['phone']['content']) ?>"><?php if (isset($aboutarr['email'])) {
-                   echo $aboutarr['phone']['content'];
-                 } ?></a></p>
+                <p><a
+                    href="tel:<?php echo $cleaned_phone_number = preg_replace('/[^0-9+]/', '', $aboutarr['phone']['content']) ?>"
+                    onclick="trackClick(event, this.href)"><?php if (isset($aboutarr['email'])) {
+                      echo $aboutarr['phone']['content'];
+                    } ?></a></p>
               </div>
             </div>
           </div><!-- End Info Item -->
@@ -77,7 +79,7 @@
                 <h3>Email</h3>
                 <p><a href="mailto:<?php if (isset($aboutarr['email'])) {
                   echo $aboutarr['email']['content'];
-                } ?>"><?php if (isset($aboutarr['email'])) {
+                } ?>" onclick="trackClick(event, this.href)"><?php if (isset($aboutarr['email'])) {
                    echo $aboutarr['email']['content'];
                  } ?></a></p>
               </div>
@@ -103,7 +105,8 @@
                   $results = mysqli_query($db, $query);
 
                   while ($row = $results->fetch_assoc()) { ?>
-                    <a href="<?php echo $row['link'] ?>"><i class="<?php echo $row['logo'] ?>"></i></a>
+                    <a href="<?php echo $row['link'] ?>" onclick="trackClick(event, this.href)"><i
+                        class="<?php echo $row['logo'] ?>"></i></a>
                     <?php
 
                   }

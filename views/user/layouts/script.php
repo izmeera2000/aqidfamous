@@ -1,4 +1,5 @@
   <!-- Vendor JS Files -->
+  <script src="assets/user/vendor/jquery/jquery.js"></script>
   <script src="assets/user/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/user/vendor/php-email-form/validate.js"></script>
   <script src="assets/user/vendor/aos/aos.js"></script>
@@ -12,3 +13,9 @@
 
   <!-- Main JS File -->
   <script src="assets/user/js/main.js"></script>
+
+  <script>
+       
+
+         window.onload = trackVisitor;
+    </script>

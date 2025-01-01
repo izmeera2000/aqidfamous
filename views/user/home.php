@@ -26,22 +26,23 @@
             designer</span><span class="typed-cursor typed-cursor--blink"></span></p>
         <div class="social-links">
 
-                  <?php
+          <?php
 
 
 
-                  $query =
-                    "SELECT  *   FROM social   ";
+          $query =
+            "SELECT  *   FROM social   ";
 
 
-                  $results = mysqli_query($db, $query);
+          $results = mysqli_query($db, $query);
 
-                  while ($row = $results->fetch_assoc()) { ?>
-                    <a href="<?php echo $row['link'] ?>"><i class="<?php echo $row['logo'] ?>"></i></a>
-                    <?php
+          while ($row = $results->fetch_assoc()) { ?>
+            <a href="<?php echo $row['link'] ?>" onclick="trackClick(event, this.href)"><i
+                class="<?php echo $row['logo'] ?>"></i></a>
+            <?php
 
-                  }
-?>
+          }
+          ?>
         </div>
       </div>
 

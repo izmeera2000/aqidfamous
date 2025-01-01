@@ -55,10 +55,27 @@ function user_contact(&$site_url)
 	];
 	require('views/user/contact.php');
 }
+
+function admin_dashboard(&$site_url)
+{
+
+	$current_page = 'dashboard';
+	$page_title = "Dashboard";
+
+	$breadcrumbs = [
+		['label' => 'Home', 'url' => $site_url . 'admin', 'active' => false],
+		['label' => 'Dashboard', 'url' => $site_url . '/', 'active' => true],
+	];
+
+
+	require('views/admin/dashboard.php');
+}
+
+
 function server()
 {
 
-	require_once('admin/server.php');
+	require_once('app/server.php');
 }
 
 
@@ -108,7 +125,37 @@ function render_title_breadcrumbs($page_title, $page_description, $breadcrumbs)
 
 	echo '</div>';
 }
+function render_title_breadcrumbs2($title, $breadcrumbs = [])
+{
+	// Open the container div for page title
+	echo '<div class="pagetitle">';
 
+	// Print the page title (h1)
+	echo '<h1>' . htmlspecialchars($title) . '</h1>';
+
+	// Open the breadcrumb navigation
+	echo '<nav>';
+	echo '<ol class="breadcrumb">';
+
+	// Loop through each breadcrumb item
+	foreach ($breadcrumbs as $breadcrumb) {
+		// Check if this breadcrumb is marked as active
+		if ($breadcrumb['active']) {
+			// Active breadcrumb
+			echo '<li class="breadcrumb-item active">' . htmlspecialchars($breadcrumb['label']) . '</li>';
+		} else {
+			// Regular breadcrumb with a link
+			echo '<li class="breadcrumb-item"><a href="' . htmlspecialchars($breadcrumb['url']) . '">' . htmlspecialchars($breadcrumb['label']) . '</a></li>';
+		}
+	}
+
+	// Close the breadcrumb list and navigation
+	echo '</ol>';
+	echo '</nav>';
+
+	// Close the page title div
+	echo '</div>';
+}
 
 
 function check_session(&$site_url, $admin = 0)
@@ -171,6 +218,25 @@ switch (true) {
 	case ($request == 'contact'):
 		// echo $request;
 		user_contact($site_url);
+		break;
+
+
+	case (str_contains($request, 'visitor_info')):
+		// echo $request;
+		server();
+		break;
+	case (str_contains($request, 'visitor_click')):
+		// echo $request;
+		server();
+		break;
+
+		case (str_contains($request, 'get_visitor_data')):
+			// echo $request;
+			server();
+			break;
+	case ($request == 'admin' || $request == 'admin/'):
+		// echo $request;
+		admin_dashboard($site_url);
 		break;
 
 	default:
