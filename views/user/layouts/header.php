@@ -4,7 +4,7 @@
     <a href="<?php echo $site_url ?> " class="logo d-flex align-items-center">
       <!-- Uncomment the line below if you also wish to use an image logo -->
       <!-- <img src="assets/user/img/logo.png" alt=""> -->
-      <h1 class="sitename">Personal <?php echo $current_page ?></h1>
+      <h1 class="sitename">aqidfamous</h1>
     </a>
 
     <nav id="navmenu" class="navmenu">
