@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 01, 2025 at 12:55 PM
+-- Generation Time: Jan 01, 2025 at 12:57 PM
 -- Server version: 8.3.0
 -- PHP Version: 8.2.18
 
@@ -30,12 +30,12 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `about`;
 CREATE TABLE IF NOT EXISTS `about` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` text NOT NULL,
-  `content` text,
+  `name` text COLLATE utf8mb4_general_ci NOT NULL,
+  `content` text COLLATE utf8mb4_general_ci,
   `time_add` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `time_edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `about`
@@ -65,16 +65,16 @@ INSERT INTO `about` (`id`, `name`, `content`, `time_add`, `time_edit`) VALUES
 DROP TABLE IF EXISTS `experience`;
 CREATE TABLE IF NOT EXISTS `experience` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `type` text NOT NULL,
-  `name` text NOT NULL,
+  `type` text COLLATE utf8mb4_general_ci NOT NULL,
+  `name` text COLLATE utf8mb4_general_ci NOT NULL,
   `date_start` date DEFAULT NULL,
   `date_end` date DEFAULT NULL,
-  `address` text NOT NULL,
-  `description` text,
+  `address` text COLLATE utf8mb4_general_ci NOT NULL,
+  `description` text COLLATE utf8mb4_general_ci,
   `time_add` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `time_edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `experience`
@@ -98,12 +98,12 @@ DROP TABLE IF EXISTS `experience_points`;
 CREATE TABLE IF NOT EXISTS `experience_points` (
   `id` int NOT NULL AUTO_INCREMENT,
   `exp_id` int NOT NULL,
-  `content` text NOT NULL,
+  `content` text COLLATE utf8mb4_general_ci NOT NULL,
   `point_order` int NOT NULL,
   `time_add` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `time_edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `experience_points`
@@ -137,13 +137,13 @@ INSERT INTO `experience_points` (`id`, `exp_id`, `content`, `point_order`, `time
 DROP TABLE IF EXISTS `gallery`;
 CREATE TABLE IF NOT EXISTS `gallery` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `type` text NOT NULL,
-  `nama` text NOT NULL,
-  `image_url` text NOT NULL,
+  `type` text COLLATE utf8mb4_general_ci NOT NULL,
+  `nama` text COLLATE utf8mb4_general_ci NOT NULL,
+  `image_url` text COLLATE utf8mb4_general_ci NOT NULL,
   `time_add` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `time_edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `interest` (
   `time_add` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `time_edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -172,15 +172,15 @@ DROP TABLE IF EXISTS `reference`;
 CREATE TABLE IF NOT EXISTS `reference` (
   `id` int NOT NULL AUTO_INCREMENT,
   `ref_order` int DEFAULT NULL,
-  `name` text NOT NULL,
-  `place` text NOT NULL,
-  `phone_num` text NOT NULL,
-  `title` text NOT NULL,
-  `email` text NOT NULL,
+  `name` text COLLATE utf8mb4_general_ci NOT NULL,
+  `place` text COLLATE utf8mb4_general_ci NOT NULL,
+  `phone_num` text COLLATE utf8mb4_general_ci NOT NULL,
+  `title` text COLLATE utf8mb4_general_ci NOT NULL,
+  `email` text COLLATE utf8mb4_general_ci NOT NULL,
   `time_add` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `time_edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `reference`
@@ -199,14 +199,14 @@ INSERT INTO `reference` (`id`, `ref_order`, `name`, `place`, `phone_num`, `title
 DROP TABLE IF EXISTS `skills`;
 CREATE TABLE IF NOT EXISTS `skills` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` text NOT NULL,
+  `name` text COLLATE utf8mb4_general_ci NOT NULL,
   `percentage` int DEFAULT NULL,
   `time_add` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `time_edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `color` text,
-  `logo` text,
+  `color` text COLLATE utf8mb4_general_ci,
+  `logo` text COLLATE utf8mb4_general_ci,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `skills`
@@ -228,13 +228,13 @@ INSERT INTO `skills` (`id`, `name`, `percentage`, `time_add`, `time_edit`, `colo
 DROP TABLE IF EXISTS `social`;
 CREATE TABLE IF NOT EXISTS `social` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` text NOT NULL,
-  `logo` text NOT NULL,
-  `link` text NOT NULL,
+  `name` text COLLATE utf8mb4_general_ci NOT NULL,
+  `logo` text COLLATE utf8mb4_general_ci NOT NULL,
+  `link` text COLLATE utf8mb4_general_ci NOT NULL,
   `time_add` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `time_edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `social`
@@ -253,10 +253,10 @@ INSERT INTO `social` (`id`, `name`, `logo`, `link`, `time_add`, `time_edit`) VAL
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `password` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -267,12 +267,12 @@ CREATE TABLE IF NOT EXISTS `users` (
 DROP TABLE IF EXISTS `web_settings`;
 CREATE TABLE IF NOT EXISTS `web_settings` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` text,
-  `content` text,
+  `name` text COLLATE utf8mb4_general_ci,
+  `content` text COLLATE utf8mb4_general_ci,
   `time_add` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `time_edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `web_settings`
