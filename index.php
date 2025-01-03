@@ -98,7 +98,7 @@ function render_title_breadcrumbs($page_title, $page_description, $breadcrumbs)
 	echo '<div class="row d-flex justify-content-center text-center">';
 	echo '<div class="col-lg-8">';
 	echo '<h1>' . htmlspecialchars($page_title) . '</h1>';
-	echo '<p class="mb-0">' . htmlspecialchars($page_description) . '</p>';
+	// echo '<p class="mb-0">' . htmlspecialchars($page_description) . '</p>';
 	echo '</div>';
 	echo '</div>';
 	echo '</div>';
@@ -234,6 +234,17 @@ switch (true) {
 			// echo $request;
 			server();
 			break;
+
+			case (str_contains($request, 'get_click_data')):
+				// echo $request;
+				server();
+				break;
+
+				
+			case (str_contains($request, 'get_report_data')):
+				// echo $request;
+				server();
+				break;
 	case ($request == 'admin' || $request == 'admin/'):
 		// echo $request;
 		admin_dashboard($site_url);

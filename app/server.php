@@ -577,4 +577,266 @@ if (isset($_POST['get_visitor_data'])) {
     echo json_encode(["status" => "error", "message" => "Error preparing the query"]);
   }
 }
+
+
+
+
+if (isset($_POST['get_click_data'])) {
+  $filter = $_POST['get_click_data']['filter'];
+
+  switch ($filter) {
+    case 'today':
+      $date_filter = date('Y-m-d');  // Today's date
+      $query = "SELECT *  FROM clicks WHERE DATE(click_time) = ?";
+      break;
+
+    case 'month':
+      $date_filter = date('Y-m');  // Current month
+      $query = "SELECT * FROM clicks WHERE DATE_FORMAT(click_time, '%Y-%m') = ?";
+      break;
+
+    case 'year':
+      $date_filter = date('Y');  // Current year
+      $query = "SELECT * FROM clicks WHERE YEAR(click_time) = ?";
+      break;
+
+    default:
+      echo json_encode(["status" => "error", "message" => "Invalid filter"]);
+      exit();
+  }
+
+  if ($stmt = $db->prepare($query)) {
+    $stmt->bind_param('s', $date_filter);  // Bind the filter date
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // Initialize the response data
+    $clickCount = 0;
+    $details = [];
+
+    while ($row = $result->fetch_assoc()) {
+      $clickCount++;
+      $details[] = [
+        'ip_address' => $row['ip'],
+        'user_agent' => $row['user_agent'],
+        'click_url' => $row['click_url'],
+      ];
+    }
+
+    // Get the previous count (for comparison)
+    $previousCountQuery = "SELECT COUNT(*) AS previous_count FROM clicks WHERE DATE(click_time) < ?";
+    $stmt2 = $db->prepare($previousCountQuery);
+    $stmt2->bind_param('s', $date_filter); // Previous count before the selected date range
+    $stmt2->execute();
+    $stmt2->bind_result($previousCount);
+    $stmt2->fetch();
+
+    // Calculate the percentage change if previous count exists
+    $percentageChange = 0;
+    $status = 'no change'; // Default status
+
+    if ($previousCount > 0) {
+      // Calculate percentage change
+      $percentageChange = (($clickCount - $previousCount) / $previousCount) * 100;
+
+      // Determine if it's an increase or decrease
+      if ($percentageChange > 0) {
+        $status = 'increase';
+      } elseif ($percentageChange < 0) {
+        $status = 'decrease';
+      } 
+
+
+      
+    } else {
+      $percentageChange = ($clickCount ) * 100;
+
+        $status = 'increase';
+    }
+
+    // Example: Add change percentage to response
+    $changePercentage = round($percentageChange, 2); // Round to 2 decimal places
+
+    // Return the response as JSON
+    $response = [
+      "status" => "success",
+      "clickCount" => $clickCount,
+      "changePercentage" => $changePercentage,
+      "statusText" => $status, // 'increase', 'decrease', or 'no change'
+      "details" => $details
+    ];
+
+    // Set the correct header and output JSON
+    header('Content-Type: application/json');
+    echo json_encode($response);
+  } else {
+    echo json_encode(["status" => "error", "message" => "Error preparing the query"]);
+  }
+}
+
+
+if (isset($_POST['get_report_data'])) {
+  $filter = $_POST['get_report_data']['filter'];
+
+  // Initialize query variables
+  $query = '';
+  $query2 = '';
+
+  switch ($filter) {
+      case 'today':
+          $date_filter = date('Y-m-d');  // Today's date
+          $query = "SELECT * FROM clicks WHERE DATE(click_time) = ?";
+          $query2 = "SELECT * FROM visitors WHERE DATE(visit_time) = ?";
+          break;
+
+      case 'month':
+          $date_filter = date('Y-m');  // Current month
+          $query = "SELECT * FROM clicks WHERE DATE_FORMAT(click_time, '%Y-%m') = ?";
+          $query2 = "SELECT * FROM visitors WHERE DATE_FORMAT(visit_time, '%Y-%m') = ?";
+          break;
+
+      case 'year':
+          $date_filter = date('Y');  // Current year
+          $query = "SELECT * FROM clicks WHERE YEAR(click_time) = ?";
+          $query2 = "SELECT * FROM visitors WHERE YEAR(visit_time) = ?";
+          break;
+
+      default:
+          echo json_encode(["status" => "error", "message" => "Invalid filter"]);
+          exit();
+  }
+
+  // Fetching data for clicks
+  if ($stmt = $db->prepare($query)) {
+      $stmt->bind_param('s', $date_filter);
+      $stmt->execute();
+      $result = $stmt->get_result();
+
+      $clickCount = 0;
+      $clickDetails = [];
+      $clickDates = [];
+
+      while ($row = $result->fetch_assoc()) {
+          $clickCount++;
+          $clickDetails[] = [
+              'ip_address' => $row['ip'],
+              'user_agent' => $row['user_agent'],
+              'click_url' => $row['click_url'],
+          ];
+
+          // Collect dates for chart plotting
+          $clickDates[] = $row['click_time']; // Store the click date for charting
+      }
+
+      // Free the result set explicitly after processing
+      $result->free();
+
+      // Fetch previous count for clicks (to calculate change percentage)
+      $previousCountQuery = "SELECT COUNT(*) AS previous_count FROM clicks WHERE DATE(click_time) < ?";
+      if ($stmt2 = $db->prepare($previousCountQuery)) {
+          $stmt2->bind_param('s', $date_filter);
+          $stmt2->execute();
+          $stmt2->bind_result($previousClickCount);
+          $stmt2->fetch();
+
+          $clickPercentageChange = 0;
+          $clickStatus = 'no change';
+
+          if ($previousClickCount > 0) {
+              // Calculate percentage change
+              $clickPercentageChange = (($clickCount - $previousClickCount) / $previousClickCount) * 100;
+              $clickStatus = $clickPercentageChange > 0 ? 'increase' : ($clickPercentageChange < 0 ? 'decrease' : 'no change');
+          } else {
+              $clickPercentageChange = ($clickCount) * 100;
+              $clickStatus = 'increase';
+          }
+
+          $clickChangePercentage = round($clickPercentageChange, 2);
+
+          // Close statement after processing
+          $stmt2->close();
+      }
+      $stmt->close();
+  } else {
+      echo json_encode(["status" => "error", "message" => "Error preparing the clicks query"]);
+      exit();
+  }
+
+  // Fetching data for visitors
+  if ($stmt2 = $db->prepare($query2)) {
+      $stmt2->bind_param('s', $date_filter);
+      $stmt2->execute();
+      $result2 = $stmt2->get_result();
+
+      $visitorCount = 0;
+      $visitorDetails = [];
+      $visitorDates = [];
+
+      while ($row = $result2->fetch_assoc()) {
+          $visitorCount++;
+          $visitorDetails[] = [
+              'ip_address' => $row['ip'],
+              'user_agent' => $row['user_agent'],
+          ];
+
+          // Collect dates for chart plotting
+          $visitorDates[] = $row['visit_time']; // Store visitor date for charting
+      }
+
+      // Free the result set explicitly after processing
+      $result2->free();
+
+      // Fetch previous count for visitors (to calculate change percentage)
+      $previousVisitorCountQuery = "SELECT COUNT(*) AS previous_count FROM visitors WHERE DATE(visit_time) < ?";
+      if ($stmt3 = $db->prepare($previousVisitorCountQuery)) {
+          $stmt3->bind_param('s', $date_filter);
+          $stmt3->execute();
+          $stmt3->bind_result($previousVisitorCount);
+          $stmt3->fetch();
+
+          $visitorPercentageChange = 0;
+          $visitorStatus = 'no change';
+
+          if ($previousVisitorCount > 0) {
+              // Calculate percentage change
+              $visitorPercentageChange = (($visitorCount - $previousVisitorCount) / $previousVisitorCount) * 100;
+              $visitorStatus = $visitorPercentageChange > 0 ? 'increase' : ($visitorPercentageChange < 0 ? 'decrease' : 'no change');
+          } else {
+              $visitorPercentageChange = ($visitorCount) * 100;
+              $visitorStatus = 'increase';
+          }
+
+          $visitorChangePercentage = round($visitorPercentageChange, 2);
+
+          // Close statement after processing
+          $stmt3->close();
+      }
+      $stmt2->close();
+  } else {
+      echo json_encode(["status" => "error", "message" => "Error preparing the visitors query"]);
+      exit();
+  }
+
+  // Return the response as JSON
+  $response = [
+      "status" => "success",
+      "clickCount" => $clickCount,
+      "visitorCount" => $visitorCount,
+      "clickChangePercentage" => $clickChangePercentage,
+      "visitorChangePercentage" => $visitorChangePercentage,
+      "clickStatus" => $clickStatus,
+      "visitorStatus" => $visitorStatus,
+      "clickDetails" => $clickDetails,
+      "visitorDetails" => $visitorDetails,
+      "clickDates" => $clickDates,
+      "visitorDates" => $visitorDates,
+  ];
+
+  // Set the correct header and output JSON
+  header('Content-Type: application/json');
+  echo json_encode($response);
+}
+
+
+
 ?>

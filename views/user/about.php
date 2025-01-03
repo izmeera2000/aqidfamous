@@ -51,9 +51,9 @@
                         } ?></h2>
 
                         <p class="fst-italic py-3">
-                        <h2><?php if (isset($aboutarr['subtitle'])) {
+                         <?php if (isset($aboutarr['subtitle'])) {
                             echo $aboutarr['subtitle']['content'];
-                        } ?></h2>
+                        } ?> 
                         </p>
                         <div class="row">
                             <div class="col-lg-6">

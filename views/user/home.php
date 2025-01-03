@@ -22,7 +22,7 @@
 
       <div class="container" data-aos="zoom-out" data-aos-delay="100">
         <h2>Aqid Danial</h2>
-        <p>I'm <span class="typed" data-typed-items="  Freelancer,Gooner,  Graphic Designer">Graphic
+        <p>I'm <span class="typed" data-typed-items="Freelancer,Gooner,  Graphic Designer">Graphic
             designer</span><span class="typed-cursor typed-cursor--blink"></span></p>
         <div class="social-links">
 

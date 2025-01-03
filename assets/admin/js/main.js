@@ -342,24 +342,20 @@
   }
 
   if ($("#visitor_card").length) {
-    // The element exists, perform actions
-    console.log("Visitor card exists");
-    // Example: change the background color of the card
-    $("#visitor_card").css("background-color", "#f8f9fa");
-
-    // You can also send an AJAX request or update content
-    // fetchVisitorData();
+    // console.log("Visitor card exists");
+    //  $("#visitor_card").css("background-color", "#f8f9fa");
 
     $("#visitor_card .dropdown-item").click(function (e) {
       e.preventDefault();
 
-      // Get the filter type (today, month, year)
       var filter = $(this).data("filter");
-      console.log(filter);
+      var filtertext = $(this).html();
 
-      // // Update the filter label to show what is selected
-      // var filterText = $(this).text();
-      // $('#filterLabel').text(filterText);
+      $("#visitor_card #card_title").html(
+        `Visitor <span>| ${filtertext}</span>`
+      );
+
+      console.log(filter);
 
       // Send the AJAX request to the backend with the selected filter
       $.ajax({
@@ -396,9 +392,6 @@
               .addClass(statusClass);
 
             $("#visitor_card #incordec").text(response.statusText);
-
-            // Display the visitor details (nested data: IP, user agent, page URL)
-            // displayVisitorDetails(response.details);
           }
         },
         error: function (xhr, status, error) {
@@ -409,4 +402,302 @@
 
     $("#visitor_card .dropdown-item[data-filter='today']").click();
   }
+
+  if ($("#click_card").length) {
+    // console.log("click card exists");
+    //  $("#click_card").css("background-color", "#f8f9fa");
+
+    $("#click_card .dropdown-item").click(function (e) {
+      e.preventDefault();
+
+      var filter = $(this).data("filter");
+      var filtertext = $(this).html();
+
+      $("#click_card #card_title").html(`Clicks <span>| ${filtertext}</span>`);
+
+      console.log(filter);
+
+      // Send the AJAX request to the backend with the selected filter
+      $.ajax({
+        url: "get_click_data", // PHP script to handle the filter request
+        method: "POST",
+        data: {
+          get_click_data: {
+            filter: filter,
+          },
+        }, // Send the selected filter as data
+        dataType: "json", // Tell jQuery to expect a JSON response
+
+        success: function (response) {
+          // Check if the response is successful
+          console.log(response);
+          if (response.status === "success") {
+            console.log("click Count:", response.clickCount); // This should work now
+            let statusClass = "";
+
+            if (response.statusText === "increase") {
+              // If the percentage is increasing, add the success class
+              statusClass = "text-success";
+            } else {
+              // If the percentage is decreasing, add the danger class
+              statusClass = "text-danger";
+            }
+            // Update the click count and change percentage
+            $("#click_card #count").text(response.clickCount);
+            $("#click_card #percentage").text(response.changePercentage + "%");
+            $("#click_card #percentage")
+              .removeClass("text-success text-danger")
+              .addClass(statusClass);
+
+            $("#click_card #incordec").text(response.statusText);
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error("Error during AJAX request:", error);
+        },
+      });
+    });
+
+    $("#click_card .dropdown-item[data-filter='today']").click();
+  }
+
+  if ($("#report_card").length) {
+    $("#report_card .dropdown-item").click(function (e) {
+        e.preventDefault();
+
+        // Get the filter value and filter text from the clicked item
+        var filter = $(this).data("filter");
+        var filtertext = $(this).html();
+
+        // Update the card title with the selected filter text
+        $("#report_card #card_title").html(
+            `Reports <span>| ${filtertext}</span>`
+        );
+
+        console.log("Selected Filter:", filter);
+
+        // Send the AJAX request to the backend with the selected filter
+        $.ajax({
+            url: "get_report_data", // PHP script to handle the filter request
+            method: "POST",
+            data: {
+                get_report_data: {
+                    filter: filter, // Send filter to the server
+                },
+            },
+            dataType: "json", // Expecting JSON response
+            success: function (response) {
+                console.log("Response Data:", response);
+                if (response.status === "success") {
+                    const clickDates = response.clickDates; // Array of click timestamps
+                    const visitorDates = response.visitorDates; // Array of visitor timestamps
+
+                    // Prepare data for chart
+                    let seriesData = [
+                        {
+                            name: "Clicks",
+                            data: [],
+                        },
+                        {
+                            name: "Visitors",
+                            data: [],
+                        },
+                    ];
+
+                    // Ensure the date parsing is correct
+                    function parseDate(dateValue) {
+                        let date = new Date(dateValue);
+                        // If the date is invalid, return null
+                        if (isNaN(date)) {
+                            console.warn("Invalid date:", dateValue);
+                            return null;
+                        }
+                        return date;
+                    }
+
+                    // Determine X-axis categories based on the selected filter
+                    let xAxisCategories = [];
+                    if (filter === "today") {
+                        let hours = Array(24).fill(0); // Initialize an array for 24 hours
+
+                        clickDates.forEach((clickDate) => {
+                            let date = parseDate(clickDate);
+                            if (date) {
+                                let hour = date.getHours();
+                                hours[hour] += 1; // Increment click count for the corresponding hour
+                            }
+                        });
+
+                        visitorDates.forEach((visitorDate) => {
+                            let date = parseDate(visitorDate);
+                            if (date) {
+                                let hour = date.getHours();
+                                hours[hour] += 1; // Increment visitor count for the corresponding hour
+                            }
+                        });
+
+                        // Auto generate hours for today (from 0:00 to 23:00)
+                        xAxisCategories = Array.from({ length: 24 }, (_, i) => {
+                            let date = new Date();
+                            date.setHours(i, 0, 0, 0); // Set the date to the start of each hour
+                            return date.getTime(); // Use timestamp for the x-axis
+                        });
+
+                        seriesData[0].data = hours.slice(); // Copy the hour array for clicks
+                        seriesData[1].data = hours.slice(); // Copy the hour array for visitors
+                    } else if (filter === "month") {
+                        const now = new Date();
+                        const daysInMonth = new Date(
+                            now.getFullYear(),
+                            now.getMonth() + 1,
+                            0
+                        ).getDate();
+
+                        // Auto generate dates for the days of the month (e.g., 1st to 31st)
+                        xAxisCategories = Array.from(
+                            { length: daysInMonth },
+                            (_, i) => {
+                                let date = new Date(now.getFullYear(), now.getMonth(), i + 1);
+                                return date.getTime(); // Use timestamp for the x-axis
+                            }
+                        );
+
+                        // Initialize counters for clicks and visitors per day
+                        let clickCounts = Array(daysInMonth).fill(0);
+                        let visitorCounts = Array(daysInMonth).fill(0);
+
+                        clickDates.forEach((clickDate) => {
+                            let date = parseDate(clickDate);
+                            if (date) {
+                                let day = date.getDate();
+                                clickCounts[day - 1] += 1; // Increment click count for the corresponding day
+                            }
+                        });
+
+                        visitorDates.forEach((visitorDate) => {
+                            let date = parseDate(visitorDate);
+                            if (date) {
+                                let day = date.getDate();
+                                visitorCounts[day - 1] += 1; // Increment visitor count for the corresponding day
+                            }
+                        });
+
+                        seriesData[0].data = clickCounts;
+                        seriesData[1].data = visitorCounts;
+                    } else if (filter === "year") {
+                        const monthNames = [
+                            "January", "February", "March", "April", "May", "June",
+                            "July", "August", "September", "October", "November", "December"
+                        ];
+
+                        // Auto generate months for the year (e.g., January to December)
+                        xAxisCategories = monthNames.map((month, i) => {
+                            let date = new Date();
+                            date.setMonth(i);
+                            date.setDate(1); // Set to the first day of the month
+                            return date.getTime(); // Use timestamp for the x-axis
+                        });
+
+                        // Initialize counters for clicks and visitors per month
+                        let clickCounts = Array(12).fill(0);
+                        let visitorCounts = Array(12).fill(0);
+
+                        clickDates.forEach((clickDate) => {
+                            let date = parseDate(clickDate);
+                            if (date) {
+                                let month = date.getMonth();
+                                clickCounts[month] += 1; // Increment click count for the corresponding month
+                            }
+                        });
+
+                        visitorDates.forEach((visitorDate) => {
+                            let date = parseDate(visitorDate);
+                            if (date) {
+                                let month = date.getMonth();
+                                visitorCounts[month] += 1; // Increment visitor count for the corresponding month
+                            }
+                        });
+
+                        seriesData[0].data = clickCounts;
+                        seriesData[1].data = visitorCounts;
+                    }
+
+                    // Check if the chart already exists, update it; otherwise, create a new one
+                    if (window.chart) {
+                        window.chart.updateOptions({
+                            series: seriesData,
+                            xaxis: {
+                                categories: xAxisCategories,
+                                type: 'datetime', // Always use datetime for the x-axis
+                                labels: {
+                                    formatter: function (value) {
+                                        let date = new Date(value);
+                                        if (filter === "today") {
+                                            return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`; // Show hour and minute
+                                        } else if (filter === "month") {
+                                            return date.getDate(); // Show day number for the month
+                                        } else if (filter === "year") {
+                                            return date.toLocaleString("default", { month: "long" }); // Show month name for the year
+                                        }
+                                    },
+                                },
+                            },
+                        });
+                    } else {
+                        // Initialize the chart with ApexCharts
+                        window.chart = new ApexCharts(
+                            document.querySelector("#reportsChart"),
+                            {
+                                series: seriesData,
+                                chart: {
+                                    type: "area",
+                                    stacked: false,
+                                    height: 350,
+                                    zoom: {
+                                        type: "x",
+                                        enabled: true,
+                                        autoScaleYaxis: true,
+                                    },
+                                    toolbar: { show: false },
+                                },
+                                dataLabels: {
+                                    enabled: false,
+                                },
+                                markers: {
+                                    size: 0,
+                                },
+                                xaxis: {
+                                    categories: xAxisCategories,
+                                    type: 'datetime', // Use datetime type for automatic handling of dates
+                                    labels: {
+                                        formatter: function (value) {
+                                            let date = new Date(value);
+                                            if (filter === "today") {
+                                                return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`; // Show hour and minute
+                                            } else if (filter === "month") {
+                                                return date.getDate(); // Show day number for the month
+                                            } else if (filter === "year") {
+                                                return date.toLocaleString("default", { month: "long" }); // Show month name for the year
+                                            }
+                                        },
+                                    },
+                                },
+                            }
+                        );
+                        window.chart.render();
+                    }
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error during AJAX request:", error);
+            },
+        });
+    });
+
+    // Trigger the 'today' filter by default when the page loads
+    $("#report_card .dropdown-item[data-filter='today']").trigger("click");
+}
+
+
+
 })();
